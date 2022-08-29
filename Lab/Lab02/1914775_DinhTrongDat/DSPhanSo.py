@@ -27,7 +27,11 @@ class DSPhanSo:
             return int(a.tu)*int(b.mau) < int(b.tu)*int(a.mau)
     
     def minFractions(self):
-        min = self.dsps[0]
+        for ps in self.dsps:
+            if(int(ps.tu) > 0 and int(ps.mau) > 0):
+                min = ps
+                break
+            
         for ps in self.dsps:
             if(int(ps.tu) > 0 and int(ps.mau) >0):
                 if(dsps.comparisionFraction(ps,min)):
@@ -44,9 +48,11 @@ class DSPhanSo:
         return pos
     
     def sumNegative(self):
+        sum = PhanSo()
         for ps in self.dsps:
             if(int(ps.tu)<0 or int(ps.mau)<0):
-                ps.__add__()
+                sum.__multiadd__(ps)
+        return sum
         
     
     def readFile(self, fileName: str):
@@ -67,6 +73,4 @@ ps = PhanSo()
 ps.tu = 2
 ps.mau = 3
 dsps.readFile('phanso.txt')
-print(f"Số lượng phân số âm có trong mảng là:  {dsps.countNegativeFraction()}")
-dsps.minFractions()
-print(*dsps.findPos(ps))
+print(f" Tong cac so am trong mang la : {dsps.sumNegative()}") 

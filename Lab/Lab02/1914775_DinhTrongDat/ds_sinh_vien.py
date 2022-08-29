@@ -24,7 +24,20 @@ class DanhSachSv:
             if self.dssv[i].mssv == mssv:
                 return i
         return -1
+    
+    def timSvTheoLoai(self, loai: str):
+        if loai == "chinhquy":
+            return [sv for sv in self.dssv if isinstance(sv, SinhVienChinhQuy)]
+        return [sv for sv in self.dssv if isinstance(sv, SinhVienPhiCQ)]
 
+    def timSvTheoTrinhDo(self, trinhDo: str, date: str):
+        return [sv for sv in self.timSvSinhTruocNgay(datetime.strptime(date, "%d/%m/%Y")) if isinstance(sv, SinhVienPhiCQ) and sv.trinhDo == trinhDo ]
+    
+    # Tim sinh vien co diem ren luyen tu 80 tro len
+    def timSvTheoDRL(self, diem: int):
+        return [sv for sv in self.dssv if isinstance(sv, SinhVienChinhQuy) and sv.diemRL >= diem]
+    
+    
     #Xoa mssv, cho biet co xoa duoc hay khong
     def xoaSvTheoMssv(self, maSo: int) -> bool:
         vt = self.timVTSvTheoMssv(maSo)
@@ -36,7 +49,7 @@ class DanhSachSv:
 
     #Tim tat ca sinh vien sinh truoc 15/8/2000
     def timSvSinhTruocNgay(self, ngay: datetime) -> list:
-        return [sv for sv in self.dssv if sv.ngaySinh<ngay]
+        return [sv for sv in self.dssv if sv._ngaySinh<ngay]
        
     #Tim tat ca sinh vien ten Nam trong danh sach
     def timSvTheoTen(self, ten: str) -> list:
@@ -49,8 +62,8 @@ class DanhSachSv:
         for line in lines:
             sp = line.split("*")
             sv = SinhVien(sp[0],sp[1],sp[2])
-            dssv.themSV(sv)
-        return dssv.dssv
+            self.themSV(sv)
+        return self.dssv
     
     def sortByName(self, type: str):
         if(type == "TANG"):
@@ -64,8 +77,8 @@ class DanhSachSv:
     # sv2 = SinhVien(1957690, "Nguyễn Văn Nam", datetime.strptime("2/2/1997", "%d/%m/%Y"))
 
 dssv = DanhSachSv()
-dssv.readFile(fileName='sinhvien.txt')
-dssv.sortByName("TANG")
+# dssv.readFile(fileName='sinhvien.txt')
+# dssv.sortByName("TANG")
     # dssv.themSV(sv1)
     # dssv.themSV(sv2)
     # dssv.xuat()

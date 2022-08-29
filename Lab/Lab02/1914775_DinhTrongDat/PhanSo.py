@@ -4,7 +4,7 @@ from unittest import result
 
 class PhanSo:
     def __init__(self):
-        self.__tu = 1
+        self.__tu = 0
         self.__mau = 1
         
     @property
@@ -27,7 +27,7 @@ class PhanSo:
             print("Mau so khong hop le")
         
     def xuat(self):
-        print(f"{self.tu}\{self.mau}")
+        print(f"{str(self.tu)}\{str(self.mau)}")
         
     def __str__(self) -> str:
         return f"{self.__tu}\{self.__mau}"
@@ -50,12 +50,23 @@ class PhanSo:
     def __add__(self, other):
         result = PhanSo()
         if self.mau == other.mau:
-            result.tu = self.tu + other.tu
-            result.mau = self.mau
+            result.tu = int(self.tu) + int(other.tu)
+            result.mau = int(self.mau)
         else:
-            result.mau = self.mau*other.mau
-            result.tu = self.tu*other.mau + self.mau*other.tu
-        return result.xuat()
+            result.mau = int(self.mau)*int(other.mau)
+            result.tu = int(self.tu)*int(other.mau) + int(self.mau)*int(other.tu)
+        return result
+    
+    def __multiadd__(self, other):
+        if self.mau == other.mau:
+            self.tu = int(self.tu) + int(other.tu)
+            self.mau = int(self.mau)
+            self.rutGon()
+        else:
+            self.mau = int(self.mau)*int(other.mau)
+            self.tu = int(self.tu)*int(other.mau) + int(self.mau)*int(other.tu)
+            self.rutGon()
+        return self
     
     def __sub__(self, other):
         result = PhanSo()

@@ -5,8 +5,8 @@ class SinhVien:
     # biến của lớp , chúng cho tất cả đối tượng thuộc lớp
     truong = "Đại học Đà Lạt"
     # hàm khởi tạo, hàm tạo lập : khởi gán các thuộc tính của đối tượng
-    def __init__(self, maSo: int, hoTen: str, ngaySinh: datetime) -> None:
-        self._maSo = maSo #khai báo kiểu truy xuất là protected
+    def __init__(self, mssv: int, hoTen: str, ngaySinh: datetime) -> None:
+        self._maSo = mssv #khai báo kiểu truy xuất là protected
         self._hoTen = hoTen 
         self._ngaySinh = ngaySinh 
         
@@ -20,11 +20,11 @@ class SinhVien:
         self._hoTen = hoTen
         
     @property
-    def maSo(self):
+    def mssv(self):
         return self._maSo
     
     
-    @maSo.setter
+    @mssv.setter
     def maSo(self, ms : int):
         if self.ktMsHopLe(ms):
             self._maSo = ms
