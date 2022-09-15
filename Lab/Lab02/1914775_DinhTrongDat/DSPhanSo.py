@@ -1,76 +1,131 @@
-
 from PhanSo import PhanSo
 
 
-class DSPhanSo:
-    def __init__(self):
-        self.dsps= []
-        
+class DanhSachPS:
+    def __init__(self) -> None:
+        self.dsps = []
+    
     def themPS(self, ps: PhanSo):
         self.dsps.append(ps)
-        
+
     def xuat(self):
         for ps in self.dsps:
             print(ps)
-    
-    def countNegativeFraction(self):
-        dem = 0
-        for ps in self.dsps:
-            if(int(ps.tu)<0 or int(ps.mau)<0):
-                dem+=1
-        return dem
-    
-    def comparisionFraction(self, a: PhanSo,b: PhanSo):
-        if(a.mau == b.mau):
-            return a.tu<b.tu
-        else:
-            return int(a.tu)*int(b.mau) < int(b.tu)*int(a.mau)
-    
-    def minFractions(self):
-        for ps in self.dsps:
-            if(int(ps.tu) > 0 and int(ps.mau) > 0):
-                min = ps
-                break
-            
-        for ps in self.dsps:
-            if(int(ps.tu) > 0 and int(ps.mau) >0):
-                if(dsps.comparisionFraction(ps,min)):
-                   min = ps
-        return min.xuat() 
-    
-    def compare(self, x: PhanSo, y: PhanSo):
-        if(x.mau == y.mau and x.tu == y.tu):
+
+    def laPhanSoDuong(self, ps: PhanSo):
+        if (ps.tuSo > 0 and ps.mauSo > 0) or (ps.tuSo < 0 and ps.mauSo < 0):
             return True
         return False
-    
-    def findPos(self, x: PhanSo):
-        pos = [p for p in range(0, len(self.dsps)) if self.compare(self.dsps[p],x)]
-        return pos
-    
-    def sumNegative(self):
-        sum = PhanSo()
-        for ps in self.dsps:
-            if(int(ps.tu)<0 or int(ps.mau)<0):
-                sum.__multiadd__(ps)
-        return sum
-        
-    
-    def readFile(self, fileName: str):
-        f = open(fileName, 'r', encoding="utf8")
-        line = f.readline()
-        sp = line.split(',')
-        for i in sp:
-            frac = i.split('/')
-            ps = PhanSo()
-            ps.tu = frac[0]
-            ps.mau = frac[1]
-            dsps.themPS(ps)
-        return dsps.dsps
 
-            
-dsps = DSPhanSo()
-ps = PhanSo()
-ps.tu = 2
-ps.mau = 3
-dsps.readFile('phanso.txt')
-print(f" Tong cac so am trong mang la : {dsps.sumNegative()}") 
+    def docTuFile(self):
+        filename = "F:\Study\Year4_Semester1\LT_Python\Lab\Lab_2\Bai_4\phanso.txt"
+        f = open(filename, "r")
+        for x in f:
+            s = x.split(",")
+            ps = PhanSo(int(s[0]), int(s[1]))
+            dsps.themPS(ps)
+
+    def demSoPSAmTrongMang(self):
+        count = 0
+        for ps in self.dsps:
+            if(self.laPhanSoDuong(ps)):
+                pass
+            else:
+                count += 1
+        return count
+
+    def chiaPhanSo(self, ps: PhanSo):
+        return ps.tuSo / ps.mauSo
+
+    def timPSDuongNhoNhat(self):
+        min = 0
+        result = PhanSo()
+        for ps in self.dsps:
+            if(self.laPhanSoDuong(ps)):
+                min = self.chiaPhanSo(ps)
+                result = ps
+                break
+        for ps in self.dsps:
+            if (self.laPhanSoDuong(ps) and self.chiaPhanSo(ps) < min):
+                min = self.chiaPhanSo(ps)
+                result = ps
+        return result
+
+    def timPSDuongNhoNhat_2(self):
+        min  = PhanSo(1_000_000_000)
+        for ps in self.dsps:
+            if ps > 0 and ps < min:
+                min = ps
+        return min
+
+    def laPhanSoGiongNhau(self, ps1: PhanSo, ps2: PhanSo):
+        return (ps1.tuSo == ps2.tuSo and ps1.mauSo == ps2.mauSo)
+        
+    def timVTPhanSo(self, phanso: PhanSo):
+        vt = []
+        for i in range(len(self.dsps)):
+            if(self.laPhanSoGiongNhau(self.dsps[i], phanso)):
+                vt.append(i)
+        return vt
+
+    def timVTPhanSo_2(self, ps: PhanSo):
+        vt = []
+        for i in range(len(self.dsps)):
+            if (self.dsps[i] == ps):
+                vt.append(i)
+        return vt
+
+    def mangPhanSoAm(self):
+        return [ps for ps in self.dsps if not self.laPhanSoDuong(ps)]
+
+    def tongPhanSoAm(self):
+        sum = PhanSo()
+        sum.tuSo = 0
+        sum.mauSo = 1
+        for i in range(len(self.mangPhanSoAm())):
+            sum = sum.__add__(self.mangPhanSoAm()[i])
+        return sum
+
+    def tongPhanSoAm_2(self):
+        sum = PhanSo(0, 1)
+        for ps in self.dsps:
+            if ps < 0:
+                print(ps)
+                sum+=ps
+        return sum
+
+    def xoaPSXTrongMang(self, phanso: PhanSo()):
+        for i in range(len(self.dsps)):
+            if self.timVTPhanSo(phanso):
+                del self.dsps[i]
+
+    def xoaPSXTrongMang_2(self, phanso: PhanSo()):
+        for ps in self.dsps:
+            if ps == phanso:
+                self.dsps.remove(ps)
+
+    def xoaPSCoTuLaX(self, tuso: int):
+        for ps in self.dsps:
+            if (ps.tuSo == tuso):
+                self.dsps.remove(ps)
+
+dsps = DanhSachPS()
+
+dsps.docTuFile()
+dsps.xuat()
+ps = PhanSo(1,2)
+
+
+# print(f"Tong cac phan so am trong mang la: {dsps.tongPhanSoAm()}")
+# print(f"Tong cac phan so am trong mang la: {dsps.tongPhanSoAm_2()}")
+# print(f"Cac vi tri xuat hien cua phan so trong mang la: {dsps.timVTPhanSo(ps)}")
+# print(f"Cac vi tri xuat hien cua phan so trong mang la: {dsps.timVTPhanSo_2(ps)}")
+# print("Phan so duong nho nhat la: ")
+# print(dsps.timPSDuongNhoNhat())
+# print(dsps.timPSDuongNhoNhat_2())
+
+
+# dsps.xoaPSXTrongMang(ps)
+dsps.xoaPSXTrongMang_2(ps)
+print(f"Danh sach mang phan so sau khi xoa phan so {ps}")
+dsps.xuat()

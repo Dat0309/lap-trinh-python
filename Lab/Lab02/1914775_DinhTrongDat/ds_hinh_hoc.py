@@ -21,15 +21,16 @@ class DanhSachHH:
     def readFile(self, fileName: str):
         f = open(fileName, 'r', encoding="utf8")
         lines = f.readlines()
+        
         for line in lines:
             sp = line.split("*")
-            if(sp[0] == "HinhVuong"):
+            if(int(sp[0]) == LoaiHinh.HinhVuong.value):
                 hv = HinhVuong(float(sp[1]))
                 self.themHH(hv)
-            elif(sp[0] == "HinhChuNhat"):
+            elif(int(sp[0]) == LoaiHinh.HinhChuNhat.value):
                 hcn = HinhChuNhat(float(sp[1]), float(sp[2]))
                 self.themHH(hcn)
-            elif(sp[0] == "HinhTron"):
+            elif(int(sp[0]) == LoaiHinh.HinhTron.value):
                 ht = HinhTron(float(sp[1]))
                 self.themHH(ht)
         return self.dshh
@@ -52,20 +53,20 @@ class DanhSachHH:
                 result = hh
         return print(result)
     
-    def timHinhCoDienTichLonNhatTheoLoai(self, loaiHinh: str):
+    def timHinhCoDienTichLonNhatTheoLoai(self, loaiHinh: int):
         max = 0
         result = HinhHoc(0)
-        if(loaiHinh == 'HinhTron'):
+        if(loaiHinh == LoaiHinh.HinhTron):
             for hh in self.dshh:
                 if(hh.dienTich > max and isinstance(hh, HinhTron)):
                     max = hh.dienTich
                     result = hh
-        elif(loaiHinh == 'HinhVuong'):
+        elif(loaiHinh == LoaiHinh.HinhVuong):
             for hh in self.dshh:
                 if(hh.dienTich > max and isinstance(hh, HinhVuong)):
                     max = hh.dienTich
                     result = hh
-        elif(loaiHinh == 'HinhChuNhat'):
+        elif(loaiHinh == LoaiHinh.HinhChuNhat):
             for hh in self.dshh:
                 if(hh.dienTich > max and isinstance(hh, HinhChuNhat)):
                     max = hh.dienTich
@@ -75,13 +76,13 @@ class DanhSachHH:
     def sapXepTheoDienTich(self):
         return self.dshh.sort(key= lambda x: x.dienTich, reverse=True)
     
-    def demSoLuongHinhTheoLoai(self, loai: str):
+    def demSoLuongHinhTheoLoai(self, loai: int):
         result = []
-        if(loai == "HinhTron"):
+        if(loai == LoaiHinh.HinhTron):
             result = [hh for hh in self.dshh if isinstance(hh, HinhTron)]
-        elif(loai == "HinhVuong"):
+        elif(loai == LoaiHinh.HinhVuong):
             result = [hh for hh in self.dshh if isinstance(hh, HinhVuong)]
-        elif(loai == "HinhChuNhat"):
+        elif(loai == LoaiHinh.HinhChuNhat):
             result = [hh for hh in self.dshh if isinstance(hh, HinhChuNhat)]
         return f"Co {len(result)} {loai}"
     
@@ -101,5 +102,10 @@ class DanhSachHH:
     
     def xoa(self, hh: HinhHoc):
         self.dshh.remove(hh)
+        
+    def sapxep(self, t: bool):
+        for hh in self.dshh:
+            return sorted(self.dshh,key=str(type(hh).__name__), reverse=t)
+            
         
         

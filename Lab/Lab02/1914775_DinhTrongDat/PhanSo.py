@@ -1,111 +1,186 @@
-from re import U
-from unittest import result
-
-
 class PhanSo:
-    def __init__(self):
-        self.__tu = 0
-        self.__mau = 1
-        
-    @property
-    def tu(self):
-        return self.__tu
-    
-    @tu.setter
-    def tu(self, tu):
+    def __init__(self, tu = 0, mau = 1) -> None:
         self.__tu = tu
-        
+        self.__mau = mau
+
     @property
-    def mau(self):
+    def tuSo(self):
+        return self.__tu
+
+    @tuSo.setter
+    def tuSo(self, tuso):
+        self.__tu = tuso
+
+    @property
+    def mauSo(self):
         return self.__mau
-    
-    @mau.setter
-    def mau(self, mau):
-        if(mau != 0):
-            self.__mau = mau
+
+    @mauSo.setter
+    def mauSo(self, mauso):
+        if mauso != 0:
+            self.__mau = mauso
         else:
             print("Mau so khong hop le")
         
-    def xuat(self):
-        print(f"{str(self.tu)}\{str(self.mau)}")
-        
+    def UCLN(self):
+        a = self.__tu
+        b = self.__mau
+        r = a % b
+        while r != 0:
+            a = b
+            b = r
+            r = a % b
+        ucln = b
+        return ucln
+
+    def rutGon(self) -> None:
+        ucln = self.UCLN()
+        tu = self.__tu / ucln
+        mau = self.__mau / ucln
+        ps = PhanSo()
+        ps.tuSo = tu
+        ps.mauSo = mau
+        return ps
+
     def __str__(self) -> str:
-        return f"{self.__tu}\{self.__mau}"
-    
-    def rutGon(self):
-        if self.tu % self.mau == 0:
-            self.tu / self.mau
-        if self.tu > self.mau:
-            for i in range(2, self.mau+1):
-                if(self.tu % i ==0 and self.mau % i ==0):
-                    self.tu = int(self.tu/i)
-                    self.mau = int(self.mau/i)
-        else:
-            for i in range(2, self.tu+1):
-                if(self.tu % i ==0 and self.mau % i ==0):
-                    self.tu = int(self.tu/i)
-                    self.mau = int(self.mau/i)
-        return self.xuat() 
-    
+        return(f"{self.__tu}/{self.__mau}")
+
     def __add__(self, other):
-        result = PhanSo()
-        if self.mau == other.mau:
-            result.tu = int(self.tu) + int(other.tu)
-            result.mau = int(self.mau)
-        else:
-            result.mau = int(self.mau)*int(other.mau)
-            result.tu = int(self.tu)*int(other.mau) + int(self.mau)*int(other.tu)
-        return result
-    
-    def __multiadd__(self, other):
-        if self.mau == other.mau:
-            self.tu = int(self.tu) + int(other.tu)
-            self.mau = int(self.mau)
-            self.rutGon()
-        else:
-            self.mau = int(self.mau)*int(other.mau)
-            self.tu = int(self.tu)*int(other.mau) + int(self.mau)*int(other.tu)
-            self.rutGon()
-        return self
-    
+        tuA = self.tuSo
+        mauA = self.mauSo
+        tuB = other.tuSo
+        mauB = other.mauSo  
+        ps = PhanSo()
+        ps.tuSo = tuA * mauB + tuB * mauA
+        ps.mauSo = mauA * mauB
+        return ps.rutGon()
+
     def __sub__(self, other):
-        result = PhanSo()
-        if self.mau == other.mau:
-            if self.tu >= other.tu:
-                result.tu = self.tu - other.tu
-                result.mau = self.mau
-            else: 
-                print('Sô bị trừ phải lớn hơn số trừ')
-        else:
-            if self.tu*other.mau >= self.mau*other.tu:
-                result.mau = self.mau*other.mau
-                result.tu = self.tu*other.mau - self.mau*other.tu
-            else: 
-                print('Sô bị trừ phải lớn hơn số trừ')
-        return result.xuat()
-    
+        tuA = self.__tu
+        mauA = self.__mau
+        tuB = other.__tu
+        mauB = other.__mau
+        tuA = tuA * mauB
+        tuB = tuB * mauA
+        mauA = mauA* mauB
+        return PhanSo((tuA-tuB), mauA).rutGon()
+
     def __mul__(self, other):
-        result = PhanSo()
-        result.tu = self.tu * other.tu
-        result.mau = self.mau * other.mau
-        return result.xuat()
-    
+        tuA = self.__tu
+        mauA = self.__mau
+        tuB = other.__tu
+        mauB = other.__mau
+        tuA = tuA * tuB
+        mauA = mauA * mauB
+        return PhanSo(tuA, mauA).rutGon()
+
     def __truediv__(self, other):
-        result = PhanSo()
-        result.tu = self.tu * other.mau
-        result.mau = self.mau * other.tu
-        return result.xuat()
+        tuA = self.__tu
+        mauA = self.__mau
+        tuB = other.__mau
+        mauB = other.__tu
+        tuA = tuA * tuB
+        mauA = mauA * mauB
+        return PhanSo(tuA, mauA).rutGon()
+
+    def __lt__(self, other):
+        if not isinstance(other, PhanSo):
+            other = PhanSo(other)
+        if (self.tuSo / self.mauSo > 0 and other.tuSo / other.mauSo < 0):
+            return False
+        elif (self.tuSo / self.mauSo < 0 and other.tuSo / other.mauSo > 0):
+            return True
+        elif (self.tuSo / self.mauSo >= 0 and other.tuSo / other.mauSo >= 0):
+            return abs(self.tuSo) * abs(other.mauSo) < abs(self.mauSo) * abs(other.tuSo)
+        elif (self.tuSo / self.mauSo <= 0 and other.tuSo / other.mauSo <= 0):
+            if (self.mauSo<0):
+                self.tuSo = -self.tuSo
+                self.mauSo = -self.mauSo
+            elif (other.mauSo < 0):
+                other.tuSo = -other.tuSo
+                other.mauSo = -other.mauSo
+            return self.tuSo * other.mauSo < other.tuSo * self.mauSo
+
+    def __gt__(self, other):
+        if not isinstance(other, PhanSo):
+            other = PhanSo(other)
+        if (self.tuSo / self.mauSo > 0 and other.tuSo / other.mauSo < 0):
+            return True
+        elif (self.tuSo / self.mauSo < 0 and other.tuSo / other.mauSo > 0):
+            return False
+        elif (self.tuSo / self.mauSo >= 0 and other.tuSo / other.mauSo >= 0):
+            return abs(self.tuSo) * abs(other.mauSo) > abs(self.mauSo) * abs(other.tuSo)
+        elif (self.tuSo / self.mauSo <= 0 and other.tuSo / other.mauSo <= 0):
+            if (self.mauSo<0):
+                self.tuSo = -self.tuSo
+                self.mauSo = -self.mauSo
+            elif (other.mauSo < 0):
+                other.tuSo = -other.tuSo
+                other.mauSo = -other.mauSo
+            return self.tuSo * other.mauSo > other.tuSo * self.mauSo
+
+
+    def __le__(self, other):
+        if not isinstance(other, PhanSo):
+            other = PhanSo(other)
+        if (self.tuSo / self.mauSo > 0 and other.tuSo / other.mauSo < 0):
+            return False
+        elif (self.tuSo / self.mauSo < 0 and other.tuSo / other.mauSo > 0):
+            return True
+        elif (self.tuSo / self.mauSo > 0 and other.tuSo / other.mauSo > 0):
+            return abs(self.tuSo) * abs(other.mauSo) <= abs(self.mauSo) * abs(other.tuSo)
+        elif (self.tuSo / self.mauSo < 0 and other.tuSo / other.mauSo < 0):
+            return self.tuSo * other.mauSo <= other.tuSo * self.mauSo
+
+
+    def __ge__(self, other):
+        if not isinstance(other, PhanSo):
+            other = PhanSo(other)
+        if (self.tuSo / self.mauSo > 0 and other.tuSo / other.mauSo < 0):
+            return True
+        elif (self.tuSo / self.mauSo < 0 and other.tuSo / other.mauSo > 0):
+            return False
+        elif (self.tuSo / self.mauSo > 0 and other.tuSo / other.mauSo > 0):
+            return abs(self.tuSo) * abs(other.mauSo) >= abs(self.mauSo) * abs(other.tuSo)
+        elif (self.tuSo / self.mauSo < 0 and other.tuSo / other.mauSo < 0):
+            return self.tuSo * other.mauSo >= other.tuSo * self.mauSo
+
+    def __eq__(self, other):
+        if not isinstance(other, PhanSo):
+            other = PhanSo(other)
+        if (self.tuSo / self.mauSo > 0 and other.tuSo / other.mauSo < 0):
+            return False
+        elif (self.tuSo / self.mauSo < 0 and other.tuSo / other.mauSo > 0):
+            return False
+        elif (self.tuSo / self.mauSo > 0 and other.tuSo / other.mauSo > 0):
+            return abs(self.tuSo) * abs(other.mauSo) == abs(self.mauSo) * abs(other.tuSo)
+        elif (self.tuSo / self.mauSo < 0 and other.tuSo / other.mauSo < 0):
+            return self.tuSo * other.mauSo == other.tuSo * self.mauSo
+
+    def __ne__(self, other):
+        if not isinstance(other, PhanSo):
+            other = PhanSo(other)
+        return self.tuSo * other.mauSo != self.mauSo * other.tuSo
+
+
     
-# a = PhanSo()
-# a.tu = 8
-# a.mau = 4
+            
 
-# b = PhanSo()
-# b.tu = 5
-# b.mau = 3
+ps1 = PhanSo()
+ps2 = PhanSo(2,-6)
+ps3 = PhanSo(1,-3)
 
-# a.rutGon()
-# a.__add__(b)
-# a.__sub__(b)
-# a.__mul__(b)
-# a.__truediv__(b)
+if (ps2 > 0):
+    print('ps2 lon hon 0')
+else:
+    print('ps2 nho hon 0')
+
+if (ps2 > ps3):
+    print('ps2 lon hon ps3')
+elif (ps2 < ps3):
+    print('ps2 nho hon ps3')
+elif (ps2 == ps3):
+    print("ps2 = ps3")
+
+ps1.tuSo = 1
+ps1.mauSo = 2

@@ -152,7 +152,7 @@ while True:
             print('===========================')
             print("Xuất danh sách hình theo loại và sắp xếp tăng hoặc giảm")
             print('===========================')
-            
+            dshh.sapxep(True)
             print('===========================')
         case 15:
             system("CLS")
