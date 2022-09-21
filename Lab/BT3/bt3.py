@@ -184,8 +184,13 @@
 
 #46 6
 #47 
-D = dict()
-for x in enumerate(range(2)):
-    D[x[0]] = x[1]
-    D[x[1]+7] = x[0]
-print(D)
+# D = dict()
+# for x in enumerate(range(2)):
+#     print(x)
+#     D[x[0]] = x[1]
+#     D[x[1]+7] = x[0]
+# print(D)
+
+#48
+# a = {i : i * i for i in range(6)}
+# print(a)
