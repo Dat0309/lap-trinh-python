@@ -1,4 +1,5 @@
 from lib2to3.pgen2 import driver
+from mimetypes import init
 from msilib.schema import Error
 import pyodbc
 
@@ -64,7 +65,7 @@ def get_all_class():
         print("Da co loi xay ra khi thuc thi. Thong tin loi: ", error)
         
 def get_all_class_with_format():
-    try:
+    # try:
         connection = get_connection()
         cursor = connection.cursor()
         
@@ -76,20 +77,79 @@ def get_all_class_with_format():
         cursor.execute(select_sinhVien)
         records_sv = cursor.fetchall()
         print("Danh sach tat ca sinh vien la: ")
-        student_dict = {}
+        student_dict = []
         
         for row in records_sv:
-            student_dict[row[0]]["id"]=row[0]
-            student_dict[row[0]]["hoTen"]=row[1]
-            student_dict[row[0]]["MaLop"]=row[2]
-            for lop in records:
-                if(row[2] == lop[0]):
-                    student_dict[row[0]]["Ten lop"]=lop[1]
+            sv = SinhVien(row[0],row[1], row[2])
+            student_dict.append(sv)
+
             close_connection(connection)
             
-        mktable(student_dict, header=('Ma so', 'Ho ten', 'Ma lop', 'Ten lop'))
-    except(Exception, pyodbc.Error) as error:
-        print("Da co loi xay ra khi thuc thi. Thong tin loi: ", error)
+        mktable(student_dict, header=('Ma so', 'Ho ten', 'Ma lop'))
+    # except(Exception, pyodbc.Error) as error:
+    #     print("Da co loi xay ra khi thuc thi. Thong tin loi: ", error)
         
 get_all_class_with_format()
 
+class SinhVien:
+    # biến của lớp , chúng cho tất cả đối tượng thuộc lớp
+    
+    # hàm khởi tạo, hàm tạo lập : khởi gán các thuộc tính của đối tượng
+    def __init__(self, maSo: int, hoTen: str, maLop: int):
+        self._maSo = maSo #thuộc tính private
+        self._hoTen = hoTen #thuộc tính private
+        self._maLop = maLop #thuộc tính private
+        
+    #cho phép truy xuất tới thuộc tính từ bên ngoài thông qua trường maSo
+    @property
+    def maSo(self):
+        return self._maSo
+    
+    # cho phép thay đổi giá trị của thuộc tính maSo
+    @maSo.setter
+    def maSo(self, maso):
+        if self.laMsHopLe(maso):
+            self._maSo = maso
+            
+    @property
+    def hoTen(self):
+        return self._hoTen
+    
+    @hoTen.setter
+    def hoTen(self, hoten):
+        self._hoTen = hoten
+        
+    @property
+    def maLop(self):
+        return self._maLop
+    
+    @maLop.setter
+    def maLop(self, malop):
+        self._maLop = malop
+    # phương thức tĩnh : các phương thức không truy xuất gì đến thuộc tính , hành vi của lớp
+    # những phương thức này không cần truyền tham số mặc định self
+    # đây không phải là một hành vi ( phương thức ) của 1 đối tượng thuộc lớp
+    @staticmethod
+    def laMsHopLe(self, maso: int):
+        return len(str(maso)) == 7
+    # phương thức của lớp , chỉ truy xuất tới các biến thành viên của lớp
+    # không truy xuất được các thuộc tính riêng của đối tượng
+    
+    #tương tự ghi đè phương thức toString()
+    def __str__(self) -> str:
+        return f"{self._maSo}\t{self._hoTen}\t{self._maLop}"
+
+    # hành vi của đối tượng sinh viên
+    def xuat(self):
+        print(f"{self._maSo}\t{self._hoTen}\t{self._maLop}")
+        
+class DanhSachSv:
+    def __init__(self):
+        self.dssv = []
+
+    def themSV(self, sv: SinhVien):
+        self.dssv.append(sv)
+
+    def xuat(self):
+        for sv in self.dssv:
+            print(sv)
